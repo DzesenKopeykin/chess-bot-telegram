@@ -1,0 +1,4 @@
+# IDE settings
+.vscode
+
+*.pyc
