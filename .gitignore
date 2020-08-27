@@ -1,4 +1,7 @@
 # IDE settings
 .vscode
 
+# ngrok executed file
+ngrok
+
 *.pyc
