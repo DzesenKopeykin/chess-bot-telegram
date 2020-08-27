@@ -4,6 +4,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+
 
 # Application definition
 
