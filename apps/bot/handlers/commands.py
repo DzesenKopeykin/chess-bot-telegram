@@ -10,7 +10,7 @@ def handle_start_command(message):
         "Здравствуйте\! Здесь вы можете поиграть в шахматы с реальными людьми\. "
         "Для того чтобы начать партию напишите `@username` пользователя с которым "
         "вы желаете играть\.\n\n*Важно\! Бот должен знать вашего оппонента, "
-        f"попросите его перейти к @dev\_chess\_bot и нажать /start*"
+        f"попросите его открыть бота @dev\_chess\_bot и нажать /start*"
     )
     message.bot.sendMessage(message.chat.id, help_text, parse_mode="MarkdownV2")
     if not tele_user.username:

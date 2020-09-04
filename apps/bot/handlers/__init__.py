@@ -1,1 +1,1 @@
-registered = ["apps.bot.handlers.commands"]
+registered = ["apps.bot.handlers.commands", "apps.bot.handlers.messages"]

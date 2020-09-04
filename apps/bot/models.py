@@ -15,7 +15,7 @@ class User(models.Model):
             defaults=dict(
                 is_bot=tele_user.is_bot,
                 first_name=tele_user.first_name,
-                last_name = tele_user.last_name,
+                last_name = tele_user.last_name or "",
                 username=tele_user.username,
             )
         )

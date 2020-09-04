@@ -12,7 +12,7 @@ def text_handler(regex):
             message = args[0]
             match = re.search(regex, message.text)
             if match:
-                kwargs["match"] = match
+                kwargs["match"] = match[0]
                 return func(*args, **kwargs)
 
         text_handlers.append(wrapper)
