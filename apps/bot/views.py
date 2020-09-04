@@ -38,6 +38,6 @@ def telegram_update(request, bot_token):
         except Exception:
             traceback.print_exc()
     else:
-        traceback.print_exc()
+        handle_message(message)
 
     return HttpResponse("OK")
