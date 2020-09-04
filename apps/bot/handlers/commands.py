@@ -6,7 +6,13 @@ from ..models import User
 def handle_start_command(message):
     tele_user = message.from_user
     User.update_or_create(tele_user)
-    send_help_text(message.bot, message.chat.id)
+    help_text = (
+        "Здравствуйте\! Здесь вы можете поиграть в шахматы с реальными людьми\. "
+        "Для того чтобы начать партию напишите `@username` пользователя с которым "
+        "вы желаете играть\.\n\n*Важно\! Бот должен знать вашего оппонента, "
+        f"попросите его перейти к @dev\_chess\_bot и нажать /start*"
+    )
+    message.bot.sendMessage(message.chat.id, help_text, parse_mode="MarkdownV2")
     if not tele_user.username:
         text = (
             "Я вижу что у вас не установлен `@username`\.\n"
@@ -24,18 +30,3 @@ def handle_start_command(message):
             parse_mode="MarkdownV2",
             disable_web_page_preview=True,
         )
-
-
-@command_handler("/help")
-def handle_start_command(message):
-    send_help_text(message.bot, message.chat.id)
-
-
-def send_help_text(bot, chat_id):
-    text = (
-        "Здравствуйте\! Здесь вы можете поиграть в шахматы с реальными людьми\. "
-        "Для того чтобы начать партию напишите `@username` пользователя с которым "
-        "вы желаете играть\.\n\n*Важно\! Бот должен знать вашего оппонента, "
-        f"попросите его перейти к @dev\_chess\_bot и нажать /start*"
-    )
-    bot.sendMessage(chat_id, text, parse_mode="MarkdownV2")
