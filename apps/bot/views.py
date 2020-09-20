@@ -32,12 +32,10 @@ def telegram_update(request, bot_token):
         text=message_data["text"],
     )
 
-    if settings.DEBUG:
-        try:
-            handle_message(message)
-        except Exception:
-            traceback.print_exc()
-    else:
+    try:
         handle_message(message)
+    except Exception:
+        if settings.DEBUG:
+            traceback.print_exc()
 
     return HttpResponse("OK")
