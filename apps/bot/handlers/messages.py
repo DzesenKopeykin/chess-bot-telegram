@@ -1,15 +1,14 @@
-from .decorators import text_handler
+from .. import router
 from ..models import User
 
 
-@text_handler("^@[a-zA-Z0-9_]{5,}$")
-def handle_username(message, match):
-    opponent_username = match[1:]  # remove @ symbol
-    player = message.from_user
+@router.message("^@[a-zA-Z0-9_]{5,}$")
+def handle_username(user, bot, chat, text):
+    opponent_username = text[1:]  # remove @ symbol
 
-    if opponent_username == player.username:
+    if opponent_username == user.username:
         text = "Вы не можете начать партию с собой."
-        message.bot.sendMessage(player.id, text)
+        bot.sendMessage(user.id, text)
         return
 
     opponent = User.objects.filter(username=opponent_username).first()
@@ -17,24 +16,23 @@ def handle_username(message, match):
     if not opponent:
         text = (
             "ChessBot не знает этого пользователя \u200d."
-            "Возможно он не открывал этого бота. Для того чтобы узнать более "
-            "подробную информацию о том что требуется, чтобы "
-            "начать партию используйте команду /help_how_to_start."
+            "Возможно он не открывал этого бота. "
+            "Используйте команду /help_how_to_start чтобы узнать больше."
         )
-        message.bot.sendMessage(message.chat.id, text)
+        bot.sendMessage(chat.id, text)
 
     else:
-        player_mention = player.full_name
-        if player.username:
-            player_mention += f" (@{player.username})"
+        user_mention = user.full_name
+        if user.username:
+            user_mention += f" (@{user.username})"
         text = (
-            f"Здравствуйте, {opponent.first_name}! {player_mention} "
+            f"Здравствуйте, {opponent.first_name}! {user_mention} "
             "предлагает сыграть в шахматы. Вы согласны?"
         )
-        message.bot.sendMessage(opponent.id, text)
+        bot.sendMessage(opponent.id, text)
 
         text = (
             f"Я отправил ваше предложение @{opponent.username}. "
             "Партия начнётся когда он(а) согласится."
         )
-        message.bot.sendMessage(player.id, text)
+        bot.sendMessage(user.id, text)
