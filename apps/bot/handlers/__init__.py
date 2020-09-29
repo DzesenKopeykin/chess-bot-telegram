@@ -1,1 +1,1 @@
-registered = ["apps.bot.handlers.commands"]
+from .commands import *  # noqa
