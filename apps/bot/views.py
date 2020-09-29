@@ -4,9 +4,9 @@ import traceback
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from telegram import Bot, Chat, Message, User
 
-from .handlers.base import handle_message
+from . import router
+from .handlers import *  # noqa
 
 
 @csrf_exempt
@@ -14,28 +14,17 @@ def telegram_update(request, bot_token):
     if bot_token != settings.BOT_TOKEN:
         return HttpResponse("OK")
 
-    data = json.loads(request.body)
-    message_data = data["message"]
-    bot = Bot(token=settings.BOT_TOKEN)
+    update_data = json.loads(request.body)
 
-    if "text" not in message_data:
-        return HttpResponse("OK")
+    from pprint import pprint
+    pprint(update_data)
 
-    user = User(**message_data["from"])
-    chat = Chat(**message_data["chat"])
-    message = Message(
-        message_id=message_data["message_id"],
-        from_user=user,
-        date=message_data["date"],
-        chat=chat,
-        bot=bot,
-        text=message_data["text"],
-    )
-
-    try:
-        handle_message(message)
-    except Exception:
-        if settings.DEBUG:
+    if settings.DEBUG:
+        try:
+            router.route(update_data)
+        except Exception:
             traceback.print_exc()
+    else:
+        router.route(update_data)
 
     return HttpResponse("OK")
