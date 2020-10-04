@@ -13,7 +13,7 @@ def handle_start_command(user, chat, bot):
         f"попросите его открыть бота @dev\_chess\_bot и нажать /start*"
     )
     bot.sendMessage(chat.id, help_text, parse_mode="MarkdownV2")
-    
+
     if not user.username:
         text = (
             "Я вижу что у вас не установлен `@username`\.\n"
@@ -28,3 +28,9 @@ def handle_start_command(user, chat, bot):
         bot.sendMessage(
             chat.id, text, parse_mode="MarkdownV2", disable_web_page_preview=True
         )
+
+
+@router.command("/help")
+def handle_start_command(chat, bot):
+    help_text = "Справочная информация"
+    bot.sendMessage(chat.id, help_text, parse_mode="MarkdownV2")
