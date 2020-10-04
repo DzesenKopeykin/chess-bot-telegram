@@ -28,3 +28,14 @@ def handle_start_command(user, chat, bot):
         bot.sendMessage(
             chat.id, text, parse_mode="MarkdownV2", disable_web_page_preview=True
         )
+
+
+@router.command("/help")
+def handle_start_command(user, chat, bot):
+    User.update_or_create(user)
+
+    help_text = (
+        "Справочная информация"
+    )
+    bot.sendMessage(chat.id, help_text, parse_mode="MarkdownV2")
+

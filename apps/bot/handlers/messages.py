@@ -41,6 +41,5 @@ def handle_username(user, bot, chat, text):
 # этот хендлер должен быть последним
 @router.message("")
 def handle_unknown_message(user, bot):
-    message = f'Моя твоя не понимать\.\nНапиши /help, чтобы узнать, что я понимаю\.'
+    message = f"Моя твоя не понимать\.\nНапиши /help, чтобы узнать, что я понимаю\."
     bot.sendMessage(user.id, message, parse_mode="MarkdownV2")
-
