@@ -15,7 +15,7 @@ def handle_username(user, bot, chat, text):
 
     if not opponent:
         text = (
-            "ChessBot не знает этого пользователя \u200d."
+            "ChessBot не знает этого пользователя."
             "Возможно он не открывал этого бота. "
             "Используйте команду /help_how_to_start чтобы узнать больше."
         )
@@ -36,3 +36,11 @@ def handle_username(user, bot, chat, text):
             "Партия начнётся когда он(а) согласится."
         )
         bot.sendMessage(user.id, text)
+
+
+# этот хендлер должен быть последним
+@router.message("")
+def handle_unknown_message(user, bot):
+    message = f'Моя твоя не понимать\.\nНапиши /help, чтобы узнать, что я понимаю\.'
+    bot.sendMessage(user.id, message, parse_mode="MarkdownV2")
+
