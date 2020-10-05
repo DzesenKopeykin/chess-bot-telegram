@@ -1,5 +1,7 @@
 from .. import router
 from ..models import User
+import chess
+import re
 
 
 @router.message("^@[a-zA-Z0-9_]{5,}$")
@@ -36,6 +38,16 @@ def handle_username(user, bot, chat, text):
             "Партия начнётся когда он(а) согласится."
         )
         bot.sendMessage(user.id, text)
+
+
+@router.message("^[a-h][1-8][a-h][1-8]$")
+def handle_move_chessman(user, bot, text):
+    # user = User.objects.filter(id=some_id).first()
+    board = chess.Board()
+    move = chess.Move.from_uci(str(text))
+    board.push(move)
+    asd = re.sub(f"\.", "0", str(board))
+    bot.sendMessage(user.id, asd, parse_mode="MarkdownV2")
 
 
 # этот хендлер должен быть последним
