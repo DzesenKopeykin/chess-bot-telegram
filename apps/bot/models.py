@@ -14,9 +14,17 @@ class User(models.Model):
     username = models.CharField(max_length=255, unique=True, null=True)
 
     in_game = models.BooleanField(default=False)
-    board = models.CharField(max_length=255, null=True)
-    opponent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
-    color = models.CharField(max_length=1, choices=COLORS, null=True)
+    board = models.CharField(max_length=255, null=True, blank=True)
+    opponent = models.ForeignKey(
+        "self", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    color = models.CharField(max_length=1, choices=COLORS, null=True, blank=True)
+
+    def __str__(self):
+        full_name = self.first_name
+        if self.username:
+            full_name += f"(@{self.username})"
+        return f"{self.id}: {full_name}"
 
     @classmethod
     def update_or_create(cls, tele_user):
