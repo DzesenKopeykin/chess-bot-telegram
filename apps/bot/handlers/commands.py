@@ -1,15 +1,15 @@
-from telegram import Update
+from telegram import Update, User
 from telegram.ext import CommandHandler
 from telegram.ext.callbackcontext import CallbackContext
 
 from .. import dispatcher
-from ..models import User
+from ..models import User as DBUser
 
 
-def handle_start_command(update: Update, context: CallbackContext):
-    user, chat, bot = update.effective_user, update.effective_chat, context.bot
+def handle_start_command(update: Update, context: CallbackContext) -> None:
+    user: User = update.effective_user
 
-    User.update_or_create(update.effective_user)
+    DBUser.update_or_create(user)
 
     help_text = (
         "Здравствуйте\! Здесь вы можете поиграть в шахматы с реальными людьми\. "
@@ -17,7 +17,7 @@ def handle_start_command(update: Update, context: CallbackContext):
         "вы желаете играть\.\n\n*Важно\! Бот должен знать вашего оппонента, "
         f"попросите его открыть бота @dev\_chess\_bot и нажать /start*"
     )
-    bot.sendMessage(chat.id, help_text, parse_mode="MarkdownV2")
+    user.send_message(help_text, parse_mode="MarkdownV2")
 
     if not user.username:
         text = (
@@ -30,15 +30,13 @@ def handle_start_command(update: Update, context: CallbackContext):
             "\n\nЕсли вы не хотите устанавливать себе `@username`, "
             "то напишите `@username` соперника\."
         )
-        bot.sendMessage(
-            chat.id, text, parse_mode="MarkdownV2", disable_web_page_preview=True
-        )
+        user.send_message(text, parse_mode="MarkdownV2", disable_web_page_preview=True)
 
 
-def handle_help_command(update: Update, context: CallbackContext):
-    chat, bot = update.effective_chat, context.bot
+def handle_help_command(update: Update, context: CallbackContext) -> None:
+    user: User = update.effective_user
     help_text = "Справочная информация"
-    bot.sendMessage(chat.id, help_text, parse_mode="MarkdownV2")
+    user.send_message(help_text, parse_mode="MarkdownV2")
 
 
 dispatcher.add_handler(CommandHandler("start", handle_start_command))
