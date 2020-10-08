@@ -1,3 +1,6 @@
-from apps.update_router.router import UpdateRouter
+from telegram.ext.updater import Updater, Dispatcher
+from django.conf import settings
 
-router = UpdateRouter()
+
+updater = Updater(settings.BOT_TOKEN, use_context=True)
+dispatcher: Dispatcher = updater.dispatcher
