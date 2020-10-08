@@ -1,10 +1,15 @@
-from .. import router
+from telegram import Update
+from telegram.ext import CommandHandler
+from telegram.ext.callbackcontext import CallbackContext
+
+from .. import dispatcher
 from ..models import User
 
 
-@router.command("/start")
-def handle_start_command(user, chat, bot):
-    User.update_or_create(user)
+def handle_start_command(update: Update, context: CallbackContext):
+    user, chat, bot = update.effective_user, update.effective_chat, context.bot
+
+    User.update_or_create(update.effective_user)
 
     help_text = (
         "Здравствуйте\! Здесь вы можете поиграть в шахматы с реальными людьми\. "
@@ -30,7 +35,11 @@ def handle_start_command(user, chat, bot):
         )
 
 
-@router.command("/help")
-def handle_start_command(chat, bot):
+def handle_help_command(update: Update, context: CallbackContext):
+    chat, bot = update.effective_chat, context.bot
     help_text = "Справочная информация"
     bot.sendMessage(chat.id, help_text, parse_mode="MarkdownV2")
+
+
+dispatcher.add_handler(CommandHandler("start", handle_start_command))
+dispatcher.add_handler(CommandHandler("help", handle_help_command))
