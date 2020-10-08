@@ -1,10 +1,14 @@
-from .. import router
+from telegram import MessageEntity, Update
+from telegram.ext import Filters, MessageHandler
+from telegram.ext.callbackcontext import CallbackContext
+
+from .. import dispatcher
 from ..models import User
 
 
-@router.message("^@[a-zA-Z0-9_]{5,}$")
-def handle_username(user, bot, chat, text):
-    opponent_username = text[1:]  # remove @ symbol
+def handle_username_message(update: Update, context: CallbackContext):
+    user, message, bot = update.effective_user, update.effective_message, context.bot
+    opponent_username = message.text[1:]  # remove @ symbol
 
     if opponent_username == user.username:
         text = "Вы не можете начать партию с собой."
@@ -19,7 +23,7 @@ def handle_username(user, bot, chat, text):
             "Возможно он не открывал этого бота. "
             "Используйте команду /help_how_to_start чтобы узнать больше."
         )
-        bot.sendMessage(chat.id, text)
+        bot.sendMessage(message.chat.id, text)
 
     else:
         user_mention = user.full_name
@@ -38,8 +42,13 @@ def handle_username(user, bot, chat, text):
         bot.sendMessage(user.id, text)
 
 
-# этот хендлер должен быть последним
-@router.message("")
-def handle_unknown_message(user, bot):
+def handle_unknown_message(update: Update, context: CallbackContext):
     message = f"Моя твоя не понимать\.\nНапиши /help, чтобы узнать, что я понимаю\."
-    bot.sendMessage(user.id, message, parse_mode="MarkdownV2")
+    context.bot.sendMessage(update.effective_user.id, message, parse_mode="MarkdownV2")
+
+
+filters_for_username = Filters.text & Filters.entity(MessageEntity.MENTION)
+filters_for_any_message = Filters.all
+
+dispatcher.add_handler(MessageHandler(filters_for_username, handle_username_message))
+dispatcher.add_handler(MessageHandler(filters_for_any_message, handle_unknown_message))
