@@ -6,7 +6,6 @@ Install pre-requisites
 1. Python 3
 2. Virtualenv with virtualenvwrapper
 3. PostgresSQL
-4. ngrok
 
 Local project initialization
 ----------------------------
@@ -17,6 +16,7 @@ Local project initialization
 4. Create your own [developer Bot](https://core.telegram.org/bots#3-how-do-i-create-a-bot) on Telegram
 5. Edit `$VIRTUAL_ENV/bin/postactivate`:
 
+        export DJANGO_SETTINGS_MODULE=config.local
         export BOT_TOKEN={{ your_bot_token }}
         export DB_NAME={{ your_database_name }}
         export DB_USER={{ your_database_user }}
@@ -31,12 +31,9 @@ Local project initialization
 
 8. Run migrations: `./manage.py migrate`
 9. Create superuser for Django CMS: `./manage.py createsuperuser`
-10. Unzip ngrok file to root of project 
 
 How to start bot locally
 -----------
 
-1. Run `./tunnel.sh`
-2. Run `workon chess_bot`
-2. Run `python3 set_webhook.py`
-3. Run `./manage.py runserver`
+1. Run `workon chess_bot`
+2. Run `python run_dev_bot.py`
