@@ -7,6 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from telegram import Bot, Update
 
 from . import dispatcher
+
+# initialize all handlers
 from .handlers import *  # noqa
 
 
@@ -15,21 +17,13 @@ def telegram_update(request: HttpRequest, bot_token: str) -> HttpResponse:
     if bot_token != settings.BOT_TOKEN:
         return HttpResponse("OK")
 
-    update_data: str = json.loads(request.body)
     bot = Bot(settings.BOT_TOKEN)
+    update_data: str = json.loads(request.body)
     update = Update.de_json(update_data, bot)
 
-    if settings.DEBUG:
-        from pprint import pprint
-
-        pprint(update_data)
-
-    if settings.DEBUG:
-        try:
-            dispatcher.process_update(update)
-        except Exception:
-            traceback.print_exc()
-    else:
+    try:
         dispatcher.process_update(update)
+    except Exception:
+        traceback.print_exc()
 
     return HttpResponse("OK")
