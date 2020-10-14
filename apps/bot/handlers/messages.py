@@ -1,8 +1,9 @@
-from telegram import MessageEntity, Update, User, Message
+from telegram import Message, MessageEntity, Update, User
 from telegram.ext import Filters, MessageHandler
 from telegram.ext.callbackcontext import CallbackContext
 
 from .. import dispatcher
+from ..builders import AskStartGameMessage
 from ..models import User as DBUser
 
 
@@ -26,11 +27,8 @@ def handle_username_message(update: Update, context: CallbackContext) -> None:
         player.send_message(text)
 
     else:
-        text = (
-            f"Здравствуйте, {opponent_db.first_name}!\n"
-            f"{player.name} предлагает сыграть в шахматы. Вы согласны?"
-        )
-        context.bot.sendMessage(opponent_db.id, text)
+        message = AskStartGameMessage(player, opponent_db)
+        context.bot.sendMessage(opponent_db.id, message.text, reply_markup=message.keyboard)
 
         text = (
             f"Я отправил ваше предложение @{opponent_username}. "
