@@ -21,10 +21,14 @@ class User(models.Model):
     color = models.CharField(max_length=1, choices=COLORS, null=True, blank=True)
 
     def __str__(self):
+        return f"{self.id}: {self.mention}"
+
+    @property
+    def full_name(self):
         full_name = self.first_name
-        if self.username:
-            full_name += f"(@{self.username})"
-        return f"{self.id}: {full_name}"
+        if self.last_name:
+            full_name += " " + self.last_name
+        return full_name
 
     @classmethod
     def update_or_create(cls, tele_user):
