@@ -1,7 +1,10 @@
+import chess
 from django.db import models
 
 
 class User(models.Model):
+    C_WHITE = "w"
+    C_BLACK = "b"
     COLORS = (
         ("w", "white"),
         ("b", "black"),
@@ -21,7 +24,7 @@ class User(models.Model):
     color = models.CharField(max_length=1, choices=COLORS, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.id}: {self.mention}"
+        return f"{self.id}: {self.full_name}"
 
     @property
     def full_name(self):
@@ -29,6 +32,27 @@ class User(models.Model):
         if self.last_name:
             full_name += " " + self.last_name
         return full_name
+
+    def start_game(self, opponent: "User") -> None:
+        self.in_game = opponent.in_game = True
+        self.board = opponent.board = chess.Board()
+        self.opponent = opponent
+        opponent.opponent = self
+        self.color = User.C_WHITE
+        opponent.color = User.C_BLACK
+
+        self.save()
+        opponent.save()
+
+    def finish_game(self) -> None:
+        opponent = self.opponent
+        self.in_game = opponent.in_game = False
+        self.board = opponent.board = None
+        self.opponent = opponent.opponent = None
+        self.color = opponent.color = None
+
+        self.save()
+        opponent.save()
 
     @classmethod
     def update_or_create(cls, tele_user):
