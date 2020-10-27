@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from . import models
+from . import models, admin_actions
 from .admin_utils import build_changelist_link
 
 
@@ -32,6 +32,7 @@ class UserAdmin(admin.ModelAdmin):
         "color",
         "is_bot",
     )
+    actions = (admin_actions.finish_game_action,)
 
     def get_opponent_link(self, obj):
         if obj.opponent is None:
