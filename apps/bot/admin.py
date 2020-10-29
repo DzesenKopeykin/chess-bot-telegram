@@ -29,10 +29,9 @@ class UserAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "in_game",
-        "color",
         "is_bot",
     )
-    actions = (admin_actions.finish_game_action,)
+    actions = (admin_actions.clear_game_data_action,)
 
     def get_opponent_link(self, obj):
         if obj.opponent is None:

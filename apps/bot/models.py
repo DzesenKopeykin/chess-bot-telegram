@@ -44,7 +44,7 @@ class User(models.Model):
         self.save()
         opponent.save()
 
-    def finish_game(self) -> None:
+    def clear_game_data(self) -> None:
         opponent = self.opponent
         self.in_game = opponent.in_game = False
         self.board = opponent.board = None
