@@ -5,14 +5,13 @@ from ..utils import build_mention
 
 
 class BaseMessage:
-    def __init__(self):
-        self.text: str = self._build_text()
-        self.keyboard: InlineKeyboardMarkup = self._build_keyboard()
+    def build(self):
+        return dict(text=self._build_text(), reply_markup=self._build_keyboard_markup())
 
     def _build_text(self) -> str:
-        raise NotImplementedError
+        pass
 
-    def _build_keyboard(self) -> InlineKeyboardMarkup:
+    def _build_keyboard_markup(self) -> InlineKeyboardMarkup:
         pass
 
 
@@ -20,7 +19,6 @@ class AskStartGameMessage(BaseMessage):
     def __init__(self, player: User, opponent_db: DBUser) -> None:
         self.player: User = player
         self.opponent_db: DBUser = opponent_db
-        super().__init__()
 
     def _build_text(self) -> str:
         return (
@@ -28,7 +26,7 @@ class AskStartGameMessage(BaseMessage):
             f"{build_mention(self.player)} предлагает сыграть в шахматы. Вы согласны?"
         )
 
-    def _build_keyboard(self) -> InlineKeyboardMarkup:
+    def _build_keyboard_markup(self) -> InlineKeyboardMarkup:
         yes_button = InlineKeyboardButton(
             "Да \U0001f44c", callback_data=f"yes_start_game|{self.player.id}"
         )

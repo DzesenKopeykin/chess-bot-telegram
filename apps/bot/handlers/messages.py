@@ -28,7 +28,7 @@ def handle_username_message(update: Update, context: CallbackContext) -> None:
 
     else:
         message = AskStartGameMessage(player, opponent_db)
-        context.bot.send_message(opponent_db.id, message.text, reply_markup=message.keyboard)
+        context.bot.send_message(opponent_db.id, **message.build())
 
         text = (
             f"Я отправил ваше предложение @{opponent_username}. "
