@@ -39,5 +39,27 @@ def handle_help_command(update: Update, context: CallbackContext) -> None:
     user.send_message(help_text, parse_mode="MarkdownV2")
 
 
+def handle_finish_game_command(update: Update, context: CallbackContext) -> None:
+    player: User = update.effective_user
+    player_db: DBUser = DBUser.objects.filter(id=player.id).first()
+
+    if not player_db:
+        player_db = DBUser.update_or_create(player)
+
+    if not player_db.in_game:
+        player.send_message("Вы не играете")
+
+    else:
+        player_db.in_game = player_db.opponent.in_game = False
+        player_db.save()
+        player_db.opponent.save()
+        
+        context.bot.send_message(
+            chat_id=player_db.opponent.id, text="Ваш соперник сдался"
+        )
+        player.send_message("Партия закончена, вы проиграли")
+
+
 dispatcher.add_handler(CommandHandler("start", handle_start_command))
 dispatcher.add_handler(CommandHandler("help", handle_help_command))
+dispatcher.add_handler(CommandHandler("finish_game", handle_finish_game_command))
